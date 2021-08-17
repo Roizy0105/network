@@ -1,0 +1,66 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+
+<!--all posts-->
+
+<body id="index_body">
+  {% for contact in page_obj %}
+  {# Each "contact" is a Contact model object. #}
+  {{ contact.full_name|upper }}<br>
+
+  <div class="card text-center" style="margin:2rem 6rem 2rem 6rem;">
+    <div class="card-header">
+      {{contact.user_id}}
+    </div>
+    <div class="card-body">
+      <p class="card-text">{{contact.content}}</p>
+    </div>
+    <div class="card-footer text-muted">
+      <div class="container">
+        <div class="row">
+          <div class="col">{{contact.likes.all|length}}
+            {% if user in contact.likes.all%}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16" style="cursor: pointer;" onclick="like({{user.id}},{{contact.id}})">
+              <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+            </svg>
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16" style="margin-left: 5px; cursor: pointer;" onclick="like({{user.id}},{{contact.id}})">
+              <path
+                d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+            </svg>
+            {% endif %}
+          </div>
+          <div class="col">{{contact.created_at}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  {% endfor %}
+
+
+
+
+
+
+
+  <nav aria-label="..." class="d-flex justify-content-center">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+      <li class="page-item"><a href="?page=1" class="page-link">First</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      {% endif %}
+      <li class="page-item"><span class="page-link" style="margin:0 1rem 0 1rem;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</body>
+
+{% endblock %}
